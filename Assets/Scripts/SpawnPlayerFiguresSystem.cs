@@ -1,7 +1,9 @@
 ﻿using DCFApixels.DragonECS;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
-internal class SpawnSystem : IEcsRun, IEcsInit
+internal class SpawnPlayerFiguresSystem : IEcsRun, IEcsInit
 {
 
     [DI] private EcsDefaultWorld _world;
@@ -15,11 +17,12 @@ internal class SpawnSystem : IEcsRun, IEcsInit
     class Aspect : EcsAspect
     {
         public EcsPool<FigureRef> FigureRefs = Inc;
+        public EcsPool<Target> Targets = Exc;
     }
     
     public void Run()
     {
-        if (Time.time - _runtimeData.LastSpawnTime > _sceneData.SpawnDelay && _aspect.FigureRefs.Count < _sceneData.MaxFigures)
+        if (Time.time - _runtimeData.LastSpawnTime > _sceneData.SpawnDelay && _world.Where(out Aspect _).Count < _sceneData.MaxFigures)
         {
             _runtimeData.LastSpawnTime = Time.time;
 
@@ -38,6 +41,8 @@ internal class SpawnSystem : IEcsRun, IEcsInit
 
             figureRef.View.Entity = _world.GetEntityLong(e);
             figureRef.View.Index = ++Index;
+
+            _runtimeData.IndexToFigure[figureRef.View.Index] = figureRef.View.Entity;
         }
     }
 

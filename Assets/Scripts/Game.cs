@@ -1,4 +1,4 @@
-
+using System;
 using DCFApixels.DragonECS;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
@@ -19,14 +19,17 @@ public class Game : MonoBehaviour
         _pipeline = EcsPipeline.New()
             .AddUnityDebug(_defaultWorld)
             
-            
-            .Add(new SpawnSystem())
+            .Add(new SpawnStageSystem())
+            .Add(new SpawnPlayerFiguresSystem())
             .Add(new DragSystem())
+            .Add(new CheckFieldSystem())
+            .Add(new KillSystem())
             
             .Inject(_defaultWorld)
             .Inject(RuntimeData)
             .Inject(StaticData)
             .Inject(SceneData)
+            .Inject(ProfileService.Instance)
             .AutoInject()
             .BuildAndInit();
     }
@@ -41,17 +44,4 @@ public class Game : MonoBehaviour
         _defaultWorld.Destroy();
         _pipeline.Destroy();
     }
-}
-
-internal struct Draggable : IEcsComponent
-{
-    public Vector3 StartPosition;
-    public Vector3 StartMouseWorldPosition;
-    public int StartRotation;
-    public Vector3 CurrentRotation;
-}
-
-internal struct FigureRef : IEcsComponent
-{ 
-    public Figure View;
 }

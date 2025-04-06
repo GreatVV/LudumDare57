@@ -1,5 +1,4 @@
-﻿using System;
-using DCFApixels.DragonECS;
+﻿using DCFApixels.DragonECS;
 using UnityEngine;
 
 internal class DragSystem : IEcsRun
@@ -11,7 +10,9 @@ internal class DragSystem : IEcsRun
     {
         public EcsPool<FigureRef> Figures = Inc;
         public EcsPool<Draggable> Draggables = Inc;
+        public EcsPool<Target> Targets = Exc;
         public EcsPool<InGrid> InGrids = Opt;
+        public EcsPool<CheckField> CheckFields = Opt;
     }
     
     public void Run()
@@ -121,15 +122,19 @@ internal class DragSystem : IEcsRun
                             || !(wp.y < gameField.FieldRoot.position.y + gameField.Size.y / 2)
                         )
                         {
-                            var rotatedPoint = figure.transform.rotation * (Vector2)point;
-                            var p = new Vector2Int(Mathf.RoundToInt(rotatedPoint.x),
-                                Mathf.RoundToInt(rotatedPoint.y)) + position;
+                            putToGrid = false;
+                            break;
+                        }
+
+                        var rotatedPoint = figure.transform.rotation * (Vector2)point;
+                        var p = new Vector2Int(
+                            Mathf.RoundToInt(rotatedPoint.x),
+                            Mathf.RoundToInt(rotatedPoint.y)) + position;
                             
-                            putToGrid = gameField.IsTaken(p) == figure.Index || gameField.IsTaken(p) == 0;
-                            if (!putToGrid)
-                            {
-                                break;
-                            }
+                        putToGrid = gameField.ItemInPosition(p) == 0 || gameField.ItemInPosition(p) == figure.Index;
+                        if (!putToGrid)
+                        {
+                            break;
                         }
                     }
 
@@ -145,11 +150,12 @@ internal class DragSystem : IEcsRun
                             var rotatedPoint = figure.transform.rotation * (Vector2)point;
                             gameField.SetTaken(figure.Index, new Vector2Int(Mathf.RoundToInt(rotatedPoint.x), Mathf.RoundToInt(rotatedPoint.y)) + position);
                         }
+
+                        a.CheckFields.NewEntity();
                     }
                     else
                     {
                         figure.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-                        
                     }
 
                     a.Draggables.Del(e);
@@ -157,11 +163,4 @@ internal class DragSystem : IEcsRun
             }
         }
     }
-}
-
-[Serializable]
-
-internal struct InGrid : IEcsComponent
-{
-    public Vector2Int Position;
 }
