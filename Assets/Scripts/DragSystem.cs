@@ -1,4 +1,5 @@
-﻿using DCFApixels.DragonECS;
+﻿using System;
+using DCFApixels.DragonECS;
 using UnityEngine;
 
 internal class DragSystem : IEcsRun
@@ -10,6 +11,7 @@ internal class DragSystem : IEcsRun
     {
         public EcsPool<FigureRef> Figures = Inc;
         public EcsPool<Draggable> Draggables = Inc;
+        public EcsPool<InGrid> InGrids = Opt;
     }
     
     public void Run()
@@ -26,9 +28,22 @@ internal class DragSystem : IEcsRun
                     ref var draggable = ref _world.GetPool<Draggable>().TryAddOrGet(e);
                     draggable.StartPosition = figure.transform.position;
                     draggable.StartMouseWorldPosition = worldPoint;
-                    draggable.StartRotation = Mathf.Round(figure.transform.localEulerAngles.z / 90f) * 90f; ;
+                    draggable.StartRotation = (int) (Mathf.Round(figure.transform.localEulerAngles.z / 90f) * 90f);
+                    draggable.CurrentRotation = figure.transform.localEulerAngles;
 
                     _world.GetPool<FigureRef>().Get(e).View.Rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+
+                    var inGrids = _world.GetPool<InGrid>();
+                    var gameField = _sceneData.GameField;
+                    if (inGrids.Has(e))
+                    {
+                        foreach (var point in figure.Points)
+                        {
+                            var rotatedPoint = figure.transform.rotation * (Vector2)point;
+                            gameField.SetTaken(0, new Vector2Int(Mathf.RoundToInt(rotatedPoint.x), Mathf.RoundToInt(rotatedPoint.y)) + inGrids.Get(e).Position);
+                        }
+                        inGrids.Del(e);
+                    }
                 }
             }
         }
@@ -44,27 +59,109 @@ internal class DragSystem : IEcsRun
 
                     if (Input.GetMouseButtonDown(1))
                     {
-                        draggable.StartRotation += 90;
+                        draggable.StartRotation -= 90;
                         draggable.StartRotation %= 360;
                     }
 
                     var figureRef = a.Figures.Get(e);
                     var figureRefView = figureRef.View;
                     figureRefView.transform.position = draggable.StartPosition + diff;
-                    figureRefView.transform.localEulerAngles = Vector3.MoveTowards(
-                        figureRefView.transform.localEulerAngles,
+                    draggable.CurrentRotation = Vector3.MoveTowards(
+                        draggable.CurrentRotation,
                         new Vector3(0, 0, draggable.StartRotation)
                         , Time.deltaTime * _staticData.FigureRotationSpeed);
+                    figureRefView.transform.localEulerAngles = draggable.CurrentRotation;
+
+                    var snap = false;
+                    var gameField = _sceneData.GameField;
+                    foreach (var point in figureRef.View.Points)
+                    {
+                        var wp = figureRefView.transform.TransformPoint(new Vector3(point.x, point.y, 0));
+                        if (
+                            wp.x > gameField.FieldRoot.position.x - gameField.Size.x / 2
+                            && wp.x < gameField.FieldRoot.position.x + gameField.Size.x / 2
+                            && wp.y > gameField.FieldRoot.position.y - gameField.Size.y / 2
+                            && wp.y < gameField.FieldRoot.position.y + gameField.Size.y / 2
+                        )
+                        {
+                            snap = true;
+                            break;
+                        }
+                    }
+
+                    if (snap)
+                    {
+                        var pos = figureRefView.transform.position;
+                        var width = gameField.Size.x / gameField.FieldSize.x;
+                        var height = gameField.Size.y / gameField.FieldSize.y;
+                        var x = gameField.FieldRoot.position.x % width;
+                        var y = gameField.FieldRoot.position.y % height;
+                        float snappedX = Mathf.Round(pos.x / width) * width;
+                        float snappedY = Mathf.Round(pos.y / height) * height;
+                        figureRefView.transform.position = new(snappedX + x, snappedY + y, pos.z);
+                    }
                 }
             }
             else
             {
                 foreach (var e in _world.Where(out Aspect a))
                 {
-                    a.Figures.Get(e).View.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+                    var putToGrid = true;
+                    var figure = a.Figures.Get(e).View;
+                    var figureRef = a.Figures.Get(e);
+                    var gameField = _sceneData.GameField;
+                    var position = gameField.ToPosition(figure.transform.position);
+                    foreach (var point in figureRef.View.Points)
+                    {
+                        var wp = figure.transform.TransformPoint(new(point.x, point.y, 0));
+                        if (
+                            !(wp.x > gameField.FieldRoot.position.x - gameField.Size.x / 2)
+                            || !(wp.x < gameField.FieldRoot.position.x + gameField.Size.x / 2)
+                            || !(wp.y > gameField.FieldRoot.position.y - gameField.Size.y / 2)
+                            || !(wp.y < gameField.FieldRoot.position.y + gameField.Size.y / 2)
+                        )
+                        {
+                            var rotatedPoint = figure.transform.rotation * (Vector2)point;
+                            var p = new Vector2Int(Mathf.RoundToInt(rotatedPoint.x),
+                                Mathf.RoundToInt(rotatedPoint.y)) + position;
+                            
+                            putToGrid = gameField.IsTaken(p) == figure.Index || gameField.IsTaken(p) == 0;
+                            if (!putToGrid)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                  
+                    if (putToGrid)
+                    {
+                        figure.Rigidbody2D.bodyType = RigidbodyType2D.Static;
+                        a.InGrids.TryAddOrGet(e).Position = position;
+                        figure.transform.position = gameField.CenterPositionFor(position);
+
+                        foreach (var point in figure.Points)
+                        {
+                            var rotatedPoint = figure.transform.rotation * (Vector2)point;
+                            gameField.SetTaken(figure.Index, new Vector2Int(Mathf.RoundToInt(rotatedPoint.x), Mathf.RoundToInt(rotatedPoint.y)) + position);
+                        }
+                    }
+                    else
+                    {
+                        figure.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+                        
+                    }
+
                     a.Draggables.Del(e);
                 }
             }
         }
     }
+}
+
+[Serializable]
+
+internal struct InGrid : IEcsComponent
+{
+    public Vector2Int Position;
 }

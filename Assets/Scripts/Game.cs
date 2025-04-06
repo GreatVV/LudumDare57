@@ -47,10 +47,11 @@ internal struct Draggable : IEcsComponent
 {
     public Vector3 StartPosition;
     public Vector3 StartMouseWorldPosition;
-    public float StartRotation;
+    public int StartRotation;
+    public Vector3 CurrentRotation;
 }
 
 internal struct FigureRef : IEcsComponent
-{
+{ 
     public Figure View;
 }
