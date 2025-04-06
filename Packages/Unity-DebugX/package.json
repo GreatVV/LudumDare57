@@ -1,0 +1,22 @@
+{
+    "name": "com.dcfa_pixels.debugx",
+    "author": 
+    {
+        "name": "DCFApixels",
+        "url": "https://github.com/DCFApixels"
+    },
+    "displayName": "DebugX",
+    "description": "",
+    "unity": "2021.3",
+    "version": "0.8.7",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DCFApixels/DebugX.git"
+    },
+    "keywords":
+    [
+        "editor",
+        "utility",
+        "gizmos"
+    ]
+}
