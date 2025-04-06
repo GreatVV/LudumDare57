@@ -29,6 +29,7 @@ public class Game : MonoBehaviour
             .Add(new CheckFieldSystem())
             .Add(new KillSystem())
             .Add(new AttackSystem())
+            .Add(new ShipKillSystem())
             .Add(new DelaySystem())
             
             .Inject(_defaultWorld)

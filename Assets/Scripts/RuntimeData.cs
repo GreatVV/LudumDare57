@@ -13,4 +13,5 @@ public class RuntimeData
     public float MonsterAttack = 1;
     
     public List<entlong> ActiveShips = new();
+    public int KilledShip;
 } 

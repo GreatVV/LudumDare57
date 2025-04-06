@@ -36,6 +36,8 @@ internal class SpawnShipSystem : IEcsRun,IEcsInit
             ref var spawnHealthBar = ref _world.GetPool<SpawnHealthBar>().Add(shipEntity);
             spawnHealthBar.Parent = ship.HealthBarRoot;
             spawnHealthBar.Prefab = _staticData.HealthBar;
+            
+            _runtimeData.ActiveShips.Add(ship.Entity);
 
             _world.DelEntity(e);
         }

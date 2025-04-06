@@ -15,6 +15,8 @@ internal class AttackSystem : IEcsRun
         public EcsPool<Attack> Attacks = Inc;
         public EcsPool<TentacleRef> TentacleRefs = Inc;
         public EcsPool<ShipRef> ShipRef = Opt;
+        public EcsPool<Health> HealthRef = Opt;
+        public EcsPool<Kill> Kill = Opt;
     }
 
     public void Run()
@@ -25,16 +27,24 @@ internal class AttackSystem : IEcsRun
             if (a.Attacks.Get(e).Target.TryGetID(out var shipEntity))
             {
                 var shipPosition = a.ShipRef.Get(shipEntity).View.AttackTarget.position;
-                var current = monsterTentacle.spline.GetPosition(1);
-                var targetPosition =
-                    monsterTentacle.transform.InverseTransformPoint(shipPosition);
+                var spline = monsterTentacle.spline;
+                var index = spline.GetPointCount() - 1;
+                var current = spline.GetPosition(index);
+                var targetPosition = monsterTentacle.transform.InverseTransformPoint(shipPosition);
                 var target = Vector3.MoveTowards(current, targetPosition, _staticData.TentacleSpeed * Time.deltaTime);
                 if (target == targetPosition)
                 {
+                    ref var health = ref a.HealthRef.Get(shipEntity);
+                    health.Current -= _runtimeData.MonsterAttack;
+                    if (health.Current <= 0)
+                    {
+                        a.Kill.TryAddOrGet(shipEntity);
+                    }
+                    
                     a.Attacks.Del(e);
                 }
 
-                monsterTentacle.spline.SetPosition(1, target);
+                monsterTentacle.spline.SetPosition(index, target);
                 monsterTentacle.BakeMesh();
             }
         }
