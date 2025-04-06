@@ -14,4 +14,7 @@ public class RuntimeData
     
     public List<entlong> ActiveShips = new();
     public int KilledShip;
+    public int TargetToKill;
+    public int LostShips;
+    public Figure[] Figures;
 } 

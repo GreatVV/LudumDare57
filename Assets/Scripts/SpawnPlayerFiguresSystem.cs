@@ -17,6 +17,7 @@ internal class SpawnPlayerFiguresSystem : IEcsRun, IEcsInit
     class Aspect : EcsAspect
     {
         public EcsPool<FigureRef> FigureRefs = Inc;
+        public EcsPool<InGrid> InGrids = Exc;
         public EcsPool<Target> Targets = Exc;
     }
     
@@ -30,7 +31,7 @@ internal class SpawnPlayerFiguresSystem : IEcsRun, IEcsInit
             var point = _sceneData.SpawnPoints[UnityEngine.Random.Range(0, _sceneData.SpawnPoints.Length)];
             ref var figureRef = ref _aspect.FigureRefs.Add(e);
             
-            figureRef.View = Object.Instantiate(_staticData.Figures[UnityEngine.Random.Range(0, _staticData.Figures.Length)], 
+            figureRef.View = Object.Instantiate(_runtimeData.Figures[UnityEngine.Random.Range(0, _runtimeData.Figures.Length)], 
                 point.position,
                 Quaternion.Euler(0,0, Random.Range(0, 360))
             );

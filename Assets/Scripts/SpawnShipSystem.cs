@@ -1,5 +1,4 @@
 ﻿using DCFApixels.DragonECS;
-using TMPro;
 using UnityEngine;
 
 internal class SpawnShipSystem : IEcsRun,IEcsInit
@@ -45,6 +44,7 @@ internal class SpawnShipSystem : IEcsRun,IEcsInit
 
     public void Init()
     {
+        _runtimeData.TargetToKill = 0;
         foreach (var shipInfo in _runtimeData.LevelTarget.Ships)
         {
             var e = _world.NewEntity();
@@ -52,6 +52,7 @@ internal class SpawnShipSystem : IEcsRun,IEcsInit
             spawnShip.Prefab = shipInfo.Ship;
             spawnShip.Speed = shipInfo.Speed;
             spawnShip.Health = shipInfo.Health;
+            _runtimeData.TargetToKill++;
             _world.GetPool<Delay>().Add(e).Time = shipInfo.Time;
         }
         

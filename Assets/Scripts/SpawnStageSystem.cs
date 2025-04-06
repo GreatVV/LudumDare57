@@ -1,5 +1,7 @@
 ﻿using DCFApixels.DragonECS;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 internal class SpawnStageSystem : IEcsRun, IEcsInit
 {
@@ -13,6 +15,8 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
     {
         public EcsPool<TentacleRef> TentacleRefs = Inc;
         public EcsPool<Attack> Attacks = Exc;
+        public EcsPool<ReturnToStartPosition> ReturnToStartPosition = Exc;
+        public EcsPool<MoveToMouth> MoveToMouth = Exc;
     }
     
     public void Run()
@@ -23,11 +27,15 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
             _runtimeData.CurrentStage %= _runtimeData.LevelTarget.Stages.Count;
             _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[_runtimeData.CurrentStage];
 
-            foreach (var tentacleEntity in _world.Where(out Aspect a))
+            if (_runtimeData.ActiveShips.Count > 0)
             {
-                a.Attacks.Add(tentacleEntity).Target = _runtimeData.ActiveShips[Random.Range(0, _runtimeData.ActiveShips.Count)];
+                foreach (var tentacleEntity in _world.Where(out Aspect a))
+                {
+                    a.Attacks.Add(tentacleEntity).Target =
+                        _runtimeData.ActiveShips[Random.Range(0, _runtimeData.ActiveShips.Count)];
+                }
             }
-            
+
             s.pool.Del(e);
         }
 
@@ -61,15 +69,19 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
 
     public void Init()
     {
-        _runtimeData.LevelTarget = _staticData.Levels[_profileService.CurrentLevel];
+        _runtimeData.LevelTarget = _staticData.Levels[_profileService.CurrentLevel % _staticData.Levels.Length];
         _runtimeData.CurrentStage = 0;
+        _runtimeData.Figures = _runtimeData.LevelTarget.Figures;
 
         _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[0];
 
         foreach (var e in _sceneData.Monster.Tentacles)
         {
             var tentacleEntity = _world.NewEntity();
-            _world.GetPool<TentacleRef>().Add(tentacleEntity).SpriteShapeController = e;
+            ref var tentacleRef = ref _world.GetPool<TentacleRef>().Add(tentacleEntity);
+            tentacleRef.SpriteShapeController = e;
+            tentacleRef.StartPosition = e.spline.GetPosition(e.spline.GetPointCount() - 1);
+            tentacleRef.MouthPosition = _sceneData.Monster.MouthPosition.position;
         }
     }
 }

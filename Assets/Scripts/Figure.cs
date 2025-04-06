@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DCFApixels.DragonECS;
 using TriInspector;
 using UnityEngine;

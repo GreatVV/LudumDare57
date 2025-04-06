@@ -18,6 +18,7 @@ public class LevelTarget : ScriptableObject
         public Figure Figure;
     }
     
+    public Figure[] Figures;
     public List<Stage> Stages = new List<Stage>();
 
     [Serializable]

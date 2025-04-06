@@ -52,16 +52,16 @@ Material:
     m_Ints: []
     m_Floats:
     - _AnimationSpeed: 1
-    - _Level: -1.47
-    - _Level2: -0.25
-    - _Noisze: 0.3
-    - _PixelsSize: 20
+    - _Level: -1.6
+    - _Level2: -0.05
+    - _Noisze: -1.07
+    - _PixelsSize: 30
     - _PosterizeSteps: 50
     - _QueueControl: 0
     - _QueueOffset: 0
     - _WavePow: 4
-    - _WaveSize: 0.008
-    - _WaveSpeed: 0.3
+    - _WaveSize: 0.005
+    - _WaveSpeed: 0.81
     m_Colors:
     - _DeepColor: {r: 0.09797075, g: 0.046991788, b: 0.30188674, a: 1}
     - _MainColor: {r: 0.16509426, g: 0.4725958, b: 1, a: 1}

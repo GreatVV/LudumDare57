@@ -1,0 +1,27 @@
+[[headers]]
+  for = "/Build/Web.data.br"
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Length = 42864544
+    Content-Type = ";application/octet-stream"
+
+[[headers]]
+  for = "/Build/Web.framework.js.br"
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Length = 79541
+    Content-Type = "application/javascript"
+
+[[headers]]
+  for = "/Build/Web.wasm.br"
+  [headers.values]
+    Content-Encoding = "br"
+    Content-Length = 12317955
+    Content-Type = "application/wasm"
+
+[[headers]]
+  for = "/Build/*.js"
+  [headers.values]
+    Content-Encoding = "js"
+    Content-Type = "application/javascript"
+

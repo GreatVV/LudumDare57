@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using DCFApixels.DragonECS;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SceneData : MonoBehaviour
 {
@@ -15,6 +13,7 @@ public class SceneData : MonoBehaviour
 
     public Transform SpawnShipPosition;
     public Transform EndShipPosition;
-
-    
+    public GameObject Win;
+    public float WinDelay = 2f;
+    public GameObject Lose;
 }

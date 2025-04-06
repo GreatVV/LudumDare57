@@ -13,7 +13,7 @@ public class Ship : MonoBehaviour
     public async void PlayDeath()
     {
         if (DeathParticles) DeathParticles.Play();
-        await Awaitable.WaitForSecondsAsync(DelayBeforeDeath);
-        Destroy(gameObject);
+        DeathParticles.transform.SetParent(default, true);
+        //Destroy(gameObject, DelayBeforeDeath);
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8311857203910348198}
   - component: {fileID: 4050692079464577777}
   m_Layer: 0
-  m_Name: Figure1x1
+  m_Name: TargetFigure1x1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,7 +50,7 @@ MonoBehaviour:
   Index: 0
   Points:
   - {x: 0, y: 0}
-  Sprite: {fileID: 21300000, guid: 202a6a1c7b021704e8a29afe1c40a717, type: 3}
+  Sprite: {fileID: 771528807, guid: 1fb847f0ef0e0864d817c2f9854c58d5, type: 3}
   Sprites:
   - {fileID: 6409354441118824530}
   Rigidbody2D: {fileID: 4050692079464577777}
@@ -172,7 +172,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 202a6a1c7b021704e8a29afe1c40a717, type: 3}
+  m_Sprite: {fileID: 771528807, guid: 1fb847f0ef0e0864d817c2f9854c58d5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -221,7 +221,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.0314136, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 1

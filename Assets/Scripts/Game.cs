@@ -1,8 +1,5 @@
-using System;
 using DCFApixels.DragonECS;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
-using Random = Unity.Mathematics.Random;
 
 public class Game : MonoBehaviour
 {
@@ -28,6 +25,8 @@ public class Game : MonoBehaviour
             .Add(new DragSystem())
             .Add(new CheckFieldSystem())
             .Add(new KillSystem())
+            .Add(new MoveToMouthSystem())
+            .Add(new ReturnToStartMouthSystem())
             .Add(new AttackSystem())
             .Add(new ShipKillSystem())
             .Add(new DelaySystem())
