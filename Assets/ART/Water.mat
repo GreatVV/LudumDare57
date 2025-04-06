@@ -56,7 +56,7 @@ Material:
     - _Level2: -0.25
     - _Noisze: 0.3
     - _PixelsSize: 20
-    - _PosterizeSteps: 80
+    - _PosterizeSteps: 50
     - _QueueControl: 0
     - _QueueOffset: 0
     - _WavePow: 4
