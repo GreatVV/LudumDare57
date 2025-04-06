@@ -2,6 +2,7 @@ using System;
 using DCFApixels.DragonECS;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
+using Random = Unity.Mathematics.Random;
 
 public class Game : MonoBehaviour
 {
@@ -20,10 +21,15 @@ public class Game : MonoBehaviour
             .AddUnityDebug(_defaultWorld)
             
             .Add(new SpawnStageSystem())
+            .Add(new SpawnShipSystem())
+            .Add(new HealthBarSystem())
             .Add(new SpawnPlayerFiguresSystem())
+            .Add(new ShipMoveSystem())
             .Add(new DragSystem())
             .Add(new CheckFieldSystem())
             .Add(new KillSystem())
+            .Add(new AttackSystem())
+            .Add(new DelaySystem())
             
             .Inject(_defaultWorld)
             .Inject(RuntimeData)

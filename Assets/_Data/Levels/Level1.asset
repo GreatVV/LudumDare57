@@ -25,3 +25,16 @@ MonoBehaviour:
   - Pairs:
     - Position: {x: 7, y: 7}
       Figure: {fileID: 748020853672651369, guid: bb5470e499c2eea4c80da0050d32f197, type: 3}
+  Ships:
+  - Ship: {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
+    Time: 0
+    Speed: 0.5
+    Health: 0
+  - Ship: {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
+    Time: 1
+    Speed: 0.7
+    Health: 0
+  - Ship: {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
+    Time: 2
+    Speed: 0.8
+    Health: 0

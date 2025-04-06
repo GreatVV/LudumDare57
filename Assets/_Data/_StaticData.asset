@@ -20,3 +20,6 @@ MonoBehaviour:
   FigureRotationSpeed: 360
   Levels:
   - {fileID: 11400000, guid: c0a2ff492e56e2e4b9b8da95445635af, type: 2}
+  Ships:
+  - {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
+  TentacleSpeed: 10
