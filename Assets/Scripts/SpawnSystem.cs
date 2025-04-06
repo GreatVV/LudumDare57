@@ -10,6 +10,8 @@ internal class SpawnSystem : IEcsRun, IEcsInit
     [DI] private RuntimeData _runtimeData;
     private Aspect _aspect;
 
+    public int Index;
+
     class Aspect : EcsAspect
     {
         public EcsPool<FigureRef> FigureRefs = Inc;
@@ -35,6 +37,7 @@ internal class SpawnSystem : IEcsRun, IEcsInit
                 1);
 
             figureRef.View.Entity = _world.GetEntityLong(e);
+            figureRef.View.Index = ++Index;
         }
     }
 

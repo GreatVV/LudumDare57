@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Figure : MonoBehaviour
 {
+    public int Index;
     public Vector2Int[] Points;
     public Sprite Sprite;
 
