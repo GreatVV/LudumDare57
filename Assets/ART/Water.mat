@@ -52,7 +52,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AnimationSpeed: 1
-    - _Level: -0.98
+    - _Level: -1.47
+    - _Level2: -0.25
     - _Noisze: 0.5
     - _PixelsSize: 20
     - _QueueControl: 0
