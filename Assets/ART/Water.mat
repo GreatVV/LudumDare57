@@ -54,7 +54,9 @@ Material:
     - _AnimationSpeed: 1
     - _Level: -1.6
     - _Level2: -0.05
-    - _Noisze: -1.07
+    - _Noise: 0.6
+    - _NoiseSpeed: 0.4
+    - _Noisze: 0.5
     - _PixelsSize: 30
     - _PosterizeSteps: 50
     - _QueueControl: 0
