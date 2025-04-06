@@ -42,6 +42,12 @@ internal class DragSystem : IEcsRun
                     ref var draggable = ref a.Draggables.Get(e);
                     var diff = worldPoint - draggable.StartMouseWorldPosition;
 
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        draggable.StartRotation += 90;
+                        draggable.StartRotation %= 360;
+                    }
+
                     var figureRef = a.Figures.Get(e);
                     var figureRefView = figureRef.View;
                     figureRefView.transform.position = draggable.StartPosition + diff;
