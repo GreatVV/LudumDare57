@@ -66,7 +66,3 @@ internal class CheckFieldSystem : IEcsRun
         }
     }
 }
-
-internal struct SpawnNextStage : IEcsComponent
-{
-}

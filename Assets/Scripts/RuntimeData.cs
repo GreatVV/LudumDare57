@@ -9,4 +9,8 @@ public class RuntimeData
     public Dictionary<int, entlong> IndexToFigure = new();
     public LevelTarget LevelTarget;
     public int CurrentStage;
-}
+
+    public float MonsterAttack = 1;
+    
+    public List<entlong> ActiveShips = new();
+} 

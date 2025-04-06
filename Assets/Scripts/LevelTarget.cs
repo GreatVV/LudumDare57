@@ -19,4 +19,15 @@ public class LevelTarget : ScriptableObject
     }
     
     public List<Stage> Stages = new List<Stage>();
+
+    [Serializable]
+    public class ShipInfo
+    {
+        public Ship Ship;
+        public float Time;
+        public float Speed;
+        public float Health;
+    }
+    
+    public ShipInfo[] Ships;
 }

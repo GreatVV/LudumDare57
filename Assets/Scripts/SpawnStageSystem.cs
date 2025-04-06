@@ -8,6 +8,12 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
     [DI] private StaticData _staticData;
     [DI] private ProfileService _profileService;
     [DI] SceneData _sceneData;
+
+    class Aspect : EcsAspect
+    {
+        public EcsPool<TentacleRef> TentacleRefs = Inc;
+        public EcsPool<Attack> Attacks = Exc;
+    }
     
     public void Run()
     {
@@ -16,6 +22,11 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
             _runtimeData.CurrentStage++;
             _runtimeData.CurrentStage %= _runtimeData.LevelTarget.Stages.Count;
             _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[_runtimeData.CurrentStage];
+
+            foreach (var tentacleEntity in _world.Where(out Aspect a))
+            {
+                a.Attacks.Add(tentacleEntity).Target = _runtimeData.ActiveShips[Random.Range(0, _runtimeData.ActiveShips.Count)];
+            }
             
             s.pool.Del(e);
         }
@@ -54,5 +65,11 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
         _runtimeData.CurrentStage = 0;
 
         _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[0];
+
+        foreach (var e in _sceneData.Monster.Tentacles)
+        {
+            var tentacleEntity = _world.NewEntity();
+            _world.GetPool<TentacleRef>().Add(tentacleEntity).SpriteShapeController = e;
+        }
     }
 }
