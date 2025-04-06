@@ -75,8 +75,17 @@ public class GameField : MonoBehaviour
         return new(Mathf.FloorToInt(diff.x /width ), Mathf.FloorToInt(diff.y / height));
     }
 
-    public int IsTaken(Vector2Int vector2Int)
+    public int ItemInPosition(Vector2Int vector2Int)
     {
         return Taken[Index(vector2Int.x, vector2Int.y)];
+    }
+
+    public Vector3 ToLocalPosition(Vector2Int position)
+    {
+        var leftBottom = -(Vector3)(Size * .5f);
+        var width = Size.x / FieldSize.x;
+        var height = Size.y / FieldSize.y;
+        var pos = leftBottom + new Vector3(position.x * width+ width * .5f, position.y * height+height*.5f, 0);
+        return pos;
     }
 }

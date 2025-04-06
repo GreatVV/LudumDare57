@@ -61,4 +61,9 @@ public class Figure : MonoBehaviour
             Sprites.Add(spriteRenderer);
         }
     }
+
+    public void Kill()
+    {
+        Destroy(gameObject);
+    }
 }

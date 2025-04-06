@@ -14,3 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Figures:
   - {fileID: 3581650711608330015, guid: f1f26dc673183574c8e8a8481d052ead, type: 3}
+  FigureLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  FigureRotationSpeed: 360
+  Levels:
+  - {fileID: 11400000, guid: c0a2ff492e56e2e4b9b8da95445635af, type: 2}
