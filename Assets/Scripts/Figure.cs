@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DCFApixels.DragonECS;
+using PrimeTween;
 using TriInspector;
 using UnityEngine;
 
@@ -12,6 +14,15 @@ public class Figure : MonoBehaviour
     public List<SpriteRenderer> Sprites = new();
     public Rigidbody2D Rigidbody2D;
     public entlong Entity;
+    
+    public float DelayBeforeDeath = 2f;
+    public float FadeTime = 1f;
+    public Ease FadeEase;
+
+    public bool Pulse;
+    public float PulseTime;
+    public Vector3 PulseSize;
+    public float PulseFrequency = 1f;
 
     private void OnValidate()
     {
@@ -25,6 +36,20 @@ public class Figure : MonoBehaviour
             Rigidbody2D = gameObject.AddComponent<Rigidbody2D>();
         }
     }
+
+    private void Start()
+    {
+        if (Pulse)
+        {
+            foreach (var sprite in Sprites)
+            {
+                Tween.PunchScale(sprite.transform, PulseSize, PulseTime, PulseFrequency, cycles: -1);
+            }
+           
+        }
+    }
+
+
     [Button]
     public void Generate()
     {
@@ -63,6 +88,15 @@ public class Figure : MonoBehaviour
 
     public void Kill()
     {
-        Destroy(gameObject);
+        foreach (var sprite in Sprites)
+        {
+            Tween.Alpha(sprite, 0, FadeTime, FadeEase);
+            var collider = sprite.GetComponent<Collider2D>();
+            if (collider)
+            {
+                collider.enabled = false;
+            }
+        }
+        Destroy(gameObject, DelayBeforeDeath);
     }
 }

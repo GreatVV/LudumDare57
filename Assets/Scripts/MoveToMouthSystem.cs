@@ -1,7 +1,9 @@
 ﻿using System;
 using DCFApixels.DragonECS;
+using PrimeTween;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 class MoveToMouthSystem : IEcsRun
 {
@@ -12,6 +14,7 @@ class MoveToMouthSystem : IEcsRun
     {
         public EcsPool<MoveToMouth> MoveToMouth = Inc;
         public EcsPool<TentacleRef> TentacleRefs = Inc;
+        public EcsPool<Delay> Dealys = Opt;
     }
 
 
@@ -21,35 +24,42 @@ class MoveToMouthSystem : IEcsRun
         {
             var tentacleRef = a.TentacleRefs.Get(e);
             var monsterTentacle = tentacleRef.SpriteShapeController;
-
-            var targetTransform = a.MoveToMouth.Get(e).Target;
+            
             var spline = monsterTentacle.spline;
-            var index = spline.GetPointCount() - 1;
-            var current = spline.GetPosition(index);
-            var targetPosition = monsterTentacle.transform.InverseTransformPoint(tentacleRef.MouthPosition);
-            var target = Vector3.MoveTowards(current, targetPosition, _staticData.TentacleSpeed * Time.deltaTime);
-
-            if (targetTransform)
+            var start = spline.GetPosition(0);
+            var pointCount = spline.GetPointCount();
+            var seq = Sequence.Create();
+            var targetGameObject = a.MoveToMouth.Get(e).Target;
+            for (int i = 1; i < pointCount; i++)
             {
-                targetTransform.position = monsterTentacle.transform.TransformPoint(target);
+                var copiedIndex = i;
+                seq.Group(Tween.Custom(spline.GetPosition(copiedIndex), Vector3.Lerp(start, tentacleRef.MouthPosition + i * Vector3.one * 0.01f, (float)copiedIndex / (pointCount - 1)), _staticData.TentacleAnimationTime,
+                    x =>
+                    {
+                        try
+                        {
+                            spline.SetPosition(copiedIndex, x);
+                            monsterTentacle.BakeMesh();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogException(ex);
+                        }
+
+                        if (copiedIndex == pointCount - 1)
+                        {
+                            targetGameObject.position = monsterTentacle.transform.TransformPoint(x);
+                        }
+                    }));
             }
             
-            if (target == targetPosition)
+            seq.OnComplete(() =>
             {
-                Object.Destroy(a.MoveToMouth.Get(e).Target.gameObject);
-                a.MoveToMouth.TryDel(e);
-            }
-
-            try
-            {
-                monsterTentacle.spline.SetPosition(index, target);
-            }
-            catch (Exception)
-            {
-                
-            }
-
-            monsterTentacle.BakeMesh();
+                Object.Destroy(targetGameObject.gameObject);
+            });
+            a.Dealys.TryAddOrGet(e).Time = _staticData.TentacleAnimationTime;
+            
+            a.MoveToMouth.TryDel(e);
         }
     }
 }

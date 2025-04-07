@@ -7,4 +7,5 @@ internal struct TentacleRef : IEcsComponent
     public SpriteShapeController SpriteShapeController;
     public Vector3 StartPosition;
     public Vector3 MouthPosition;
+    public ParticleSystem AttackParticle;
 }

@@ -17,6 +17,7 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
         public EcsPool<Attack> Attacks = Exc;
         public EcsPool<ReturnToStartPosition> ReturnToStartPosition = Exc;
         public EcsPool<MoveToMouth> MoveToMouth = Exc;
+        public EcsPool<Delay> Delays = Exc;
     }
     
     public void Run()
@@ -84,8 +85,9 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
             tentacleRef.SpriteShapeController = e;
             tentacleRef.SpriteShapeController.gameObject.SetActive(true);
             tentacleRef.StartPosition = e.spline.GetPosition(e.spline.GetPointCount() - 1);
-            tentacleRef.MouthPosition = _sceneData.Monster.MouthPosition.position;
-            
+            tentacleRef.MouthPosition = e.transform.InverseTransformPoint(_sceneData.Monster.MouthPosition.position);
+            tentacleRef.AttackParticle = Object.Instantiate(_staticData.AttackParticle);
+
         }
     }
 }

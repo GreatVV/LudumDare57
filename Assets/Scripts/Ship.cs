@@ -10,9 +10,13 @@ public class Ship : MonoBehaviour
     public ParticleSystem DeathParticles;
     public float DelayBeforeDeath = 1f;
 
-    public async void PlayDeath()
+    public async void PlayDeath(float delay)
     {
-        if (DeathParticles) DeathParticles.Play();
+        await Awaitable.WaitForSecondsAsync(delay);
+        if (DeathParticles)
+        {
+            DeathParticles.Play();
+        }
         DeathParticles.transform.SetParent(default, true);
         //Destroy(gameObject, DelayBeforeDeath);
     }

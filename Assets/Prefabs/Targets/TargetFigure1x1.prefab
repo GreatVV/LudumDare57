@@ -56,6 +56,13 @@ MonoBehaviour:
   Rigidbody2D: {fileID: 4050692079464577777}
   Entity:
     _full: 0
+  DelayBeforeDeath: 1
+  FadeTime: 0.3
+  FadeEase: 6
+  Pulse: 1
+  PulseTime: 2
+  PulseSize: {x: 0.2, y: 0.2, z: 0.2}
+  PulseFrequency: 1
 --- !u!210 &8311857203910348198
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -172,7 +179,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1517132282, guid: e803871d0e6d4384eac4a04799719dec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 14a0a91e63e5d3447bbe1ad752740334, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

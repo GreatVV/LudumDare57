@@ -16,4 +16,6 @@ public class SceneData : MonoBehaviour
     public GameObject Win;
     public float WinDelay = 2f;
     public GameObject Lose;
+
+   
 }

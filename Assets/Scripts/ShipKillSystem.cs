@@ -6,6 +6,7 @@ internal class ShipKillSystem : IEcsRun
     [DI] private EcsDefaultWorld _world;
     [DI] private RuntimeData _runtimeData;
     [DI] SceneData _sceneData;
+    [DI] StaticData _staticData;
     class Ship : EcsAspect
     {
         public EcsPool<ShipRef> Ships = Inc;
@@ -17,7 +18,7 @@ internal class ShipKillSystem : IEcsRun
         {
             var view = aspect.Ships.Get(e).View;
             _runtimeData.ActiveShips.Remove(view.Entity);
-            view.PlayDeath();
+            view.PlayDeath(_staticData.TentacleAnimationTime- 0.01f);
 
             _runtimeData.KilledShip++;
             if (_runtimeData.KilledShip + _runtimeData.LostShips >= _runtimeData.TargetToKill)

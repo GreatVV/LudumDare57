@@ -1,4 +1,5 @@
 ﻿using DCFApixels.DragonECS;
+using PrimeTween;
 using UnityEngine;
 
 class ReturnToStartMouthSystem : IEcsRun
@@ -10,6 +11,7 @@ class ReturnToStartMouthSystem : IEcsRun
     {
         public EcsPool<ReturnToStartPosition> ReturnToStartPositions = Inc;
         public EcsPool<TentacleRef> TentacleRefs = Inc;
+        public EcsPool<Delay> Dealys = Opt;
     }
 
 
@@ -21,16 +23,22 @@ class ReturnToStartMouthSystem : IEcsRun
             var monsterTentacle = tentacleRef.SpriteShapeController;
             
             var spline = monsterTentacle.spline;
-            var index = spline.GetPointCount() - 1;
-            var current = spline.GetPosition(index);
-            var target = Vector3.MoveTowards(current, tentacleRef.StartPosition, _staticData.TentacleSpeed * Time.deltaTime);
-            if (target == tentacleRef.StartPosition)
+            var start = spline.GetPosition(0);
+            var pointCount = spline.GetPointCount();
+            var seq = Sequence.Create();
+            for (int i = 1; i < pointCount; i++)
             {
-                a.ReturnToStartPositions.TryDel(e);
+                var copiedIndex = i;
+                seq.Group(Tween.Custom(spline.GetPosition(copiedIndex), Vector3.Lerp(start, tentacleRef.StartPosition, (float)copiedIndex / (pointCount - 1)), _staticData.TentacleAnimationTime,
+                    x =>
+                    {
+                        spline.SetPosition(copiedIndex, x);
+                        monsterTentacle.BakeMesh();
+                    }));
             }
 
-            monsterTentacle.spline.SetPosition(index, target);
-            monsterTentacle.BakeMesh();
+            a.Dealys.TryAddOrGet(e).Time = _staticData.TentacleAnimationTime;
+            a.ReturnToStartPositions.TryDel(e);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DCFApixels.DragonECS;
+using PrimeTween;
 using UnityEngine;
 
 internal class AttackSystem : IEcsRun
@@ -18,23 +19,47 @@ internal class AttackSystem : IEcsRun
         public EcsPool<Kill> Kill = Opt;
         public EcsPool<ReturnToStartPosition> ReturnToStartPosition = Opt;
         public EcsPool<MoveToMouth> MoveToMouth = Opt;
+        public EcsPool<Delay> Dealys = Opt;
     }
 
     public void Run()
     {
         foreach (var e in _world.Where(out TentacleAspect a))
         {
-            var monsterTentacle = a.TentacleRefs.Get(e).SpriteShapeController;
+            var tentacleRef = a.TentacleRefs.Get(e);
+            var monsterTentacle = tentacleRef.SpriteShapeController;
             if (a.Attacks.Get(e).Target.TryGetID(out var shipEntity))
             {
                 var view = a.ShipRef.Get(shipEntity).View;
                 var shipPosition = view.AttackTarget.position;
                 var spline = monsterTentacle.spline;
-                var index = spline.GetPointCount() - 1;
-                var current = spline.GetPosition(index);
+                var pointCount = spline.GetPointCount();
                 var targetPosition = monsterTentacle.transform.InverseTransformPoint(shipPosition);
-                var target = Vector3.MoveTowards(current, targetPosition, _staticData.TentacleSpeed * Time.deltaTime);
-                if (target == targetPosition)
+                var start = spline.GetPosition(0);
+                var seq = Sequence.Create();
+                var normal = Vector2.Perpendicular((Vector2)(targetPosition - start));
+              
+                for (int i = 1; i < pointCount; i++)
+                {
+                    var copiedIndex = i;
+                    var target = targetPosition + (Vector3)((Random.value - 0.5f) * _staticData.RandomForTentacle * normal) ;
+                    if (i == pointCount - 1)
+                    {
+                        target = targetPosition;
+                    }
+                    seq.Group(Tween.Custom(spline.GetPosition(copiedIndex), Vector3.Lerp(start, target, (float)copiedIndex / (pointCount - 1)), 
+                        _staticData.TentacleAnimationTime,
+                        x =>
+                        {
+                            spline.SetPosition(copiedIndex, x);
+                            monsterTentacle.BakeMesh();
+                        },
+                        _staticData.TentacleEase));
+                }
+
+                a.Dealys.TryAddOrGet(e).Time = _staticData.TentacleAnimationTime;
+
+                seq.OnComplete(() =>
                 {
                     ref var health = ref a.HealthRef.Get(shipEntity);
                     health.Current -= _runtimeData.MonsterAttack;
@@ -42,16 +67,18 @@ internal class AttackSystem : IEcsRun
                     {
                         a.Kill.TryAddOrGet(shipEntity);
                         a.MoveToMouth.TryAddOrGet(e).Target = view.transform;
-                    } 
-                    else 
+                    }
+                    else
                     {
+                        
                         a.ReturnToStartPosition.TryAddOrGet(e);
                     }
-                    a.Attacks.Del(e);
-                }
 
-                monsterTentacle.spline.SetPosition(index, target);
-                monsterTentacle.BakeMesh();
+                    tentacleRef.AttackParticle.transform.position = shipPosition;
+                    tentacleRef.AttackParticle.Play();
+                    
+                });
+                a.Attacks.Del(e);
             }
             else
             {

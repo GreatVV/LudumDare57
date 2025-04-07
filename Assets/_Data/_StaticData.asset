@@ -25,3 +25,7 @@ MonoBehaviour:
   - {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
   TentacleSpeed: 10
   HealthBar: {fileID: 6002983277166443941, guid: 636876f09a6d07b41a633b5fcfbbe038, type: 3}
+  TentacleAnimationTime: 0.5
+  RandomForTentacle: 0.5
+  TentacleEase: 7
+  AttackParticle: {fileID: 6872539844408934819, guid: ee03eaac0937ee1459620fac44656970, type: 3}
