@@ -24,8 +24,8 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
         foreach (var e in _world.Where(out SingleAspect<SpawnNextStage> s))
         {
             _runtimeData.CurrentStage++;
-            _runtimeData.CurrentStage %= _runtimeData.LevelTarget.Stages.Count;
-            _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[_runtimeData.CurrentStage];
+
+            _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.GetStage(_runtimeData.CurrentStage);;
 
             if (_runtimeData.ActiveShips.Count > 0)
             {
@@ -69,19 +69,23 @@ internal class SpawnStageSystem : IEcsRun, IEcsInit
 
     public void Init()
     {
-        _runtimeData.LevelTarget = _staticData.Levels[_profileService.CurrentLevel % _staticData.Levels.Length];
+        _runtimeData.LevelTarget = _staticData.Levels[Mathf.Clamp(_profileService.CurrentLevel,0, _staticData.Levels.Length-1)];
         _runtimeData.CurrentStage = 0;
         _runtimeData.Figures = _runtimeData.LevelTarget.Figures;
 
-        _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.Stages[0];
+        _world.GetPool<SpawnStage>().NewEntity().Value = _runtimeData.LevelTarget.GetStage(0);
 
-        foreach (var e in _sceneData.Monster.Tentacles)
+        var tentaclesLength = Mathf.Min(_runtimeData.LevelTarget.TentacleNumber, _sceneData.Monster.Tentacles.Length);
+        for (var index = 0; index < tentaclesLength; index++)
         {
+            var e = _sceneData.Monster.Tentacles[index];
             var tentacleEntity = _world.NewEntity();
             ref var tentacleRef = ref _world.GetPool<TentacleRef>().Add(tentacleEntity);
             tentacleRef.SpriteShapeController = e;
+            tentacleRef.SpriteShapeController.gameObject.SetActive(true);
             tentacleRef.StartPosition = e.spline.GetPosition(e.spline.GetPointCount() - 1);
             tentacleRef.MouthPosition = _sceneData.Monster.MouthPosition.position;
+            
         }
     }
 }

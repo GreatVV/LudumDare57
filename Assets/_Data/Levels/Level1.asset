@@ -30,6 +30,7 @@ MonoBehaviour:
   - Pairs:
     - Position: {x: 7, y: 1}
       Figure: {fileID: 748020853672651369, guid: bb5470e499c2eea4c80da0050d32f197, type: 3}
+  TentacleNumber: 1
   Ships:
   - Ship: {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
     Time: 0
@@ -43,3 +44,9 @@ MonoBehaviour:
     Time: 5
     Speed: 0.1
     Health: 3
+  GeneratedLevel: 0
+  NumberOfShips: 0
+  DelayBetweenShips: 1
+  MinSpeed: 0
+  MaxSpeed: 0
+  PossibleShips: []

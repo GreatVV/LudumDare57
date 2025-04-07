@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc48adf1cbd462d890806c6ced14ae2, type: 3}
   m_Name: _StaticData
   m_EditorClassIdentifier: 
-  Figures:
-  - {fileID: 3581650711608330015, guid: f1f26dc673183574c8e8a8481d052ead, type: 3}
-  - {fileID: 9090222934798966276, guid: 2f3680d8922400e4ab2d8004df7fc2e8, type: 3}
-  - {fileID: 473313701047505982, guid: b44924d9f0c75364c92e5f9ac0d27174, type: 3}
   FigureLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -23,6 +19,8 @@ MonoBehaviour:
   Levels:
   - {fileID: 11400000, guid: c0a2ff492e56e2e4b9b8da95445635af, type: 2}
   - {fileID: 11400000, guid: 96647dedbc86c654cb318edc5e36bc67, type: 2}
+  - {fileID: 11400000, guid: da3a2b03137c4464992d3f980fb3cb39, type: 2}
+  - {fileID: 11400000, guid: 5bf417a613ec9684c80842a466a7b719, type: 2}
   Ships:
   - {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
   TentacleSpeed: 10

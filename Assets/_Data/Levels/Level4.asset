@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2374769e89ff40a6ba23c954bf4e693c, type: 3}
+  m_Name: Level4
+  m_EditorClassIdentifier: 
+  Figures:
+  - {fileID: 2451716027789958349, guid: 9e625f3f6c935d64eba5b26c4902f610, type: 3}
+  - {fileID: 9090222934798966276, guid: 2f3680d8922400e4ab2d8004df7fc2e8, type: 3}
+  - {fileID: 473313701047505982, guid: b44924d9f0c75364c92e5f9ac0d27174, type: 3}
+  - {fileID: 8504106935704416181, guid: d47cfb90b474eab47863b0da24fd7378, type: 3}
+  Stages:
+  - Pairs: []
+  TentacleNumber: 3
+  Ships: []
+  GeneratedLevel: 1
+  MinNumberOfShips: 5
+  MaxNumberOfShips: 10
+  DelayBetweenShips: 1
+  MinSpeed: 0.2
+  MaxSpeed: 0.4
+  PossibleShips:
+  - {fileID: 6445845148149644280, guid: df51f9b26fe582d439f2218582c30a5f, type: 3}
+  - {fileID: 6445845148149644280, guid: d564bf5abe184564ba254cfe35e0d623, type: 3}
+  - {fileID: 6445845148149644280, guid: d90ad0508d9de2848b3dd4de61717325, type: 3}
+  TargetFigures:
+  - {fileID: 748020853672651369, guid: bb5470e499c2eea4c80da0050d32f197, type: 3}
+  - {fileID: 8872808658894657633, guid: 104c66a3484ead64ea38c2958d2f3c7d, type: 3}
+  - {fileID: 5879729640919361668, guid: 3a17eb66d1bdcac4b96999c6f46b8d35, type: 3}

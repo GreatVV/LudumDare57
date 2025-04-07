@@ -45,7 +45,7 @@ internal class SpawnShipSystem : IEcsRun,IEcsInit
     public void Init()
     {
         _runtimeData.TargetToKill = 0;
-        foreach (var shipInfo in _runtimeData.LevelTarget.Ships)
+        foreach (var shipInfo in _runtimeData.LevelTarget.GetShips())
         {
             var e = _world.NewEntity();
             ref var spawnShip = ref _world.GetPool<SpawnShip>().Add(e);

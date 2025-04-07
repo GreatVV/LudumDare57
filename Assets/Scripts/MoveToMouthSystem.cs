@@ -28,7 +28,12 @@ class MoveToMouthSystem : IEcsRun
             var current = spline.GetPosition(index);
             var targetPosition = monsterTentacle.transform.InverseTransformPoint(tentacleRef.MouthPosition);
             var target = Vector3.MoveTowards(current, targetPosition, _staticData.TentacleSpeed * Time.deltaTime);
-            targetTransform.position = monsterTentacle.transform.TransformPoint(target);
+
+            if (targetTransform)
+            {
+                targetTransform.position = monsterTentacle.transform.TransformPoint(target);
+            }
+            
             if (target == targetPosition)
             {
                 Object.Destroy(a.MoveToMouth.Get(e).Target.gameObject);
